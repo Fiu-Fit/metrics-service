@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common/decorators';
-import { DateFilterDTO } from './dto/date-filter.dto';
+import { GetMetricsQueryDTO } from './dto/get-metrics-query.dto';
 import { ProgressMetricDTO } from './dto/progress-metric.dto';
 import { MetricsService } from './metrics.service';
 
@@ -22,11 +22,9 @@ export class MetricsController {
   }
 
   @Get()
-  getProgressMetrics(@Query() dateFilter: DateFilterDTO) {
-    if (dateFilter.start || dateFilter.end) {
-      dateFilter.start = new Date(0).toISOString();
-      dateFilter.end = new Date().toISOString();
-      return this.metricService.findAndCountByDate(dateFilter);
+  getProgressMetrics(@Query() filter: GetMetricsQueryDTO) {
+    if (filter.start || filter.end || filter.exercise) {
+      return this.metricService.findAndCountWithFilter(filter);
     }
 
     return this.metricService.findAndCount();

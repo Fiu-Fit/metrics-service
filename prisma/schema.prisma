@@ -15,6 +15,7 @@ model ProgressMetric {
   calories_burnt Float
   value          Float
   unit           Unit
+  exerciseId     String
   userId         Int
   updatedAt      DateTime @updatedAt
 }

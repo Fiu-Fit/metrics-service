@@ -12,6 +12,9 @@ export class ProgressMetricDTO {
   unit: Unit;
 
   @IsNumber()
+  exerciseId: string;
+
+  @IsNumber()
   userId: number;
 
   @IsOptional()

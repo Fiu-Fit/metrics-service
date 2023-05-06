@@ -2,7 +2,7 @@ import { Page } from '@fiu-fit/common';
 import { Injectable } from '@nestjs/common';
 import { ProgressMetric } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
-import { DateFilterDTO } from './dto/date-filter.dto';
+import { GetMetricsQueryDTO } from './dto/get-metrics-query.dto';
 import { ProgressMetricDTO } from './dto/progress-metric.dto';
 
 @Injectable()
@@ -24,16 +24,17 @@ export class MetricsService {
     };
   }
 
-  async findAndCountByDate(
-    dateFilter: DateFilterDTO
+  async findAndCountWithFilter(
+    filter: GetMetricsQueryDTO
   ): Promise<Page<ProgressMetric>> {
     const rows = await this.prisma.progressMetric.findMany({
-      orderBy: { updatedAt: 'asc' },
+      orderBy: { id: 'asc' },
       where:   {
         updatedAt: {
-          gte: dateFilter.start,
-          lte: dateFilter.end,
+          gte: filter.start,
+          lte: filter.end,
         },
+        exerciseId: filter.exercise,
       },
     });
 
