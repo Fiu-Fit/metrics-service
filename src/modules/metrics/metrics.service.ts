@@ -35,6 +35,7 @@ export class MetricsService {
           lte: filter.end,
         },
         exerciseId: filter.exercise,
+        userId:     filter.user,
       },
     });
 

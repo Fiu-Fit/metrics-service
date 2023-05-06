@@ -1,4 +1,5 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetMetricsQueryDTO {
   @IsDateString()
@@ -12,4 +13,9 @@ export class GetMetricsQueryDTO {
   @IsString()
   @IsOptional()
   exercise?: string;
+
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  user?: number;
 }

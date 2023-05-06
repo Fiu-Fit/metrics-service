@@ -1,5 +1,5 @@
 import { Unit } from '@prisma/client';
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class ProgressMetricDTO {
   @IsNumber()
@@ -11,7 +11,7 @@ export class ProgressMetricDTO {
   @IsEnum(Unit)
   unit: Unit;
 
-  @IsNumber()
+  @IsNotEmpty()
   exerciseId: string;
 
   @IsNumber()
