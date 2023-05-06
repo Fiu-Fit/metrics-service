@@ -2,8 +2,7 @@ import { Page } from '@fiu-fit/common';
 import { Injectable } from '@nestjs/common';
 import { ProgressMetric } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
-import { GetMetricsQueryDTO } from './dto/get-metrics-query.dto';
-import { ProgressMetricDTO } from './dto/progress-metric.dto';
+import { GetMetricsQueryDTO, ProgressMetricDTO } from './dto';
 
 @Injectable()
 export class MetricsService {

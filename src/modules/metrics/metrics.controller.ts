@@ -8,8 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common/decorators';
-import { GetMetricsQueryDTO } from './dto/get-metrics-query.dto';
-import { ProgressMetricDTO } from './dto/progress-metric.dto';
+import { GetMetricsQueryDTO, ProgressMetricDTO } from './dto';
 import { MetricsService } from './metrics.service';
 
 @Controller('metrics')
