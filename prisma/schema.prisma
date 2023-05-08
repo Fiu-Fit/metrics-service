@@ -10,5 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ProgressMetric {
+  id             Int      @id @default(autoincrement())
+  calories_burnt Float
+  value          Float
+  unit           Unit
+  exerciseId     String
+  userId         Int
+  updatedAt      DateTime @updatedAt
+}
 
-
+enum Unit {
+  KILOGRAMS
+  METERS
+  SECONDS
+}
