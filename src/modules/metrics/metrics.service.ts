@@ -39,7 +39,7 @@ export class MetricsService {
     });
 
     return {
-      rows:  rows,
+      rows,
       count: rows.length,
     };
   }
@@ -47,7 +47,7 @@ export class MetricsService {
   getProgressMetricById(id: number): Promise<ProgressMetric | null> {
     return this.prisma.progressMetric.findUnique({
       where: {
-        id: id,
+        id,
       },
     });
   }
@@ -58,7 +58,7 @@ export class MetricsService {
   ): Promise<ProgressMetric | null> {
     return this.prisma.progressMetric.update({
       where: {
-        id: id,
+        id,
       },
       data,
     });
@@ -67,7 +67,7 @@ export class MetricsService {
   deleteProgressMetric(id: number): Promise<ProgressMetric | null> {
     return this.prisma.progressMetric.delete({
       where: {
-        id: id,
+        id,
       },
     });
   }
