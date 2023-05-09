@@ -54,6 +54,33 @@ async function main() {
       updatedAt:      new Date('2020-04-01T00:00:00.000Z'),
     },
   });
+
+  await prisma.goal.upsert({
+    where:       { id: 1 },
+    update:      {},
+    create: {
+      title:       'Run 10 km',
+      description: 'Run 10 km in 1 week',
+      userId:      1,  
+      targetValue: 10, 
+      deadline:    new Date('2023-05-13T00:00:00.000Z'),
+      exerciseId:     '64553734c6e2840fd63b190a',
+    },
+  });
+
+  await prisma.goal.upsert({
+    where:       { id: 2 },
+    update:      {},
+    create: {
+      title:       'Complete 100 front squats',
+      description: 'Do 100 front squats in 1 week',
+      userId:      1,  
+      targetValue: 100, 
+      deadline:    new Date('2023-05-13T00:00:00.000Z'),
+      exerciseId:     '64553734c6e2840fd63b190a',
+    },
+  });
+
 }
 main()
   .then(async () => {
