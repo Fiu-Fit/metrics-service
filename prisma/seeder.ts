@@ -81,6 +81,32 @@ async function main() {
     },
   });
 
+  await prisma.goal.upsert({
+    where:       { id: 3 },
+    update:      {},
+    create: {
+      title:       'Complete 100 arm flexions',
+      description: 'Do 100 flexions in 1 week',
+      userId:      2,  
+      targetValue: 100, 
+      deadline:    new Date('2023-05-13T00:00:00.000Z'),
+      exerciseId:     '64553734c6e2840fd63b190a',
+    },
+  });
+
+  await prisma.goal.upsert({
+    where:       { id: 4 },
+    update:      {},
+    create: {
+      title:       'Complete 200 abs',
+      description: 'Do 200 abs in 1 week',
+      userId:      2,  
+      targetValue: 200, 
+      deadline:    new Date('2023-05-13T00:00:00.000Z'),
+      exerciseId:     '64553734c6e2840fd63b190a',
+    },
+  });
+
 }
 main()
   .then(async () => {
