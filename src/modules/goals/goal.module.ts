@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from '../../prisma.service';
+import { MetricsService } from '../metrics/metrics.service';
 import { GoalController } from './goal.controller';
 import { GoalService } from './goal.service';
 
@@ -12,6 +13,6 @@ import { GoalService } from './goal.service';
   ],
   exports:     [GoalService],
   controllers: [GoalController],
-  providers:   [GoalService, PrismaService],
+  providers:   [GoalService, MetricsService, PrismaService],
 })
 export class GoalModule {}
