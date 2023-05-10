@@ -8,9 +8,11 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { Goal } from '@prisma/client';
-import { GoalDTO } from './goal.dto';
+import { GetGoalsQueryDto } from './dto/get-goals-query.dto';
+import { GoalDTO } from './dto/goal.dto';
 import { GoalService } from './goal.service';
 
 @Controller('goals')
@@ -22,8 +24,11 @@ export class GoalController {
     return this.goalService.createGoal(goal);
   }
 
-  @Get()
-  getGoals(): Promise<Goal[]> {
+  @Get() 
+  getGoals(@Query() filter: GetGoalsQueryDto): Promise<Goal[]> {
+    if (Object.values(filter).some(value => !!value)) {
+      return this.goalService.findAllWithFilter(filter);
+    }
     return this.goalService.findAll();
   }
 
