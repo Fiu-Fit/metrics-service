@@ -23,13 +23,7 @@ export class GoalDTO {
   targetValue: number;
 
   @IsOptional()
-  actualValue: number;
-
-  @IsOptional()
   deadline: Date;
-
-  @IsOptional()
-  updatedAt: Date;
 
   @IsString()
   exerciseId: string;
