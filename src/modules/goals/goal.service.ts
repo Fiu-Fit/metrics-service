@@ -30,17 +30,21 @@ export class GoalService {
     return this.checkGoalStatus(goal);
   }
 
-  findAll(): Promise<Goal[]> {
-    return this.prismaService.goal.findMany({  
+  async findAll(): Promise<Goal[]> {
+    const updatedGoals = await this.prismaService.goal.findMany({  
       orderBy:  { id: 'asc' },
-    });
+    }).then(goals => Promise.all(goals.map(goal => this.checkGoalStatus(goal))));
+
+    return updatedGoals;
   }
 
-  findAllWithFilter(filter: GetGoalsQueryDto): Promise<Goal[]> {
-    return this.prismaService.goal.findMany({
+  async findAllWithFilter(filter: GetGoalsQueryDto): Promise<Goal[]> {
+    const updatedGoals = await this.prismaService.goal.findMany({
       orderBy: { id: 'asc' },
       where:   { userId: filter.user }
-    });
+    }).then(goals => Promise.all(goals.map(goal => this.checkGoalStatus(goal))));
+
+    return updatedGoals;
   }
 
   editGoal(id: number, goal: GoalDTO): Promise<Goal> {    
