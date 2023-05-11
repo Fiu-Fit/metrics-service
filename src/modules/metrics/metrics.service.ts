@@ -14,16 +14,7 @@ export class MetricsService {
     });
   }
 
-  async findAndCount(): Promise<Page<ProgressMetric>> {
-    return {
-      rows: await this.prisma.progressMetric.findMany({
-        orderBy: { id: 'asc' },
-      }),
-      count: await this.prisma.progressMetric.count(),
-    };
-  }
-
-  async findAndCountWithFilter(
+  async findAndCount(
     filter: GetMetricsQueryDTO
   ): Promise<Page<ProgressMetric>> {
     const rows = await this.prisma.progressMetric.findMany({
@@ -33,8 +24,8 @@ export class MetricsService {
           gte: filter.start,
           lte: filter.end,
         },
-        exerciseId: filter.exercise,
-        userId:     filter.user,
+        exerciseId: filter.exerciseId,
+        userId:     filter.userId,
       },
     });
 

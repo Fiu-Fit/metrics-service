@@ -12,10 +12,10 @@ export class GetMetricsQueryDTO {
 
   @IsString()
   @IsOptional()
-  exercise?: string;
+  exerciseId?: string;
 
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  user?: number;
+  userId?: number;
 }
