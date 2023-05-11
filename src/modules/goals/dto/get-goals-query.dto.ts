@@ -1,10 +1,14 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetGoalsQueryDto {
     @IsNumber()
     @Type(() => Number)
     @IsOptional()
-    user?: number;
+    userId?: number;
+
+    @IsString()
+    @IsOptional()
+    exerciseId?: string;
 }
 

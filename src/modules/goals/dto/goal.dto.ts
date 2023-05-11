@@ -7,7 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class GoalDTO {
+export class GoalDto {
   @IsString()
   @MaxLength(30)
   title: string;
