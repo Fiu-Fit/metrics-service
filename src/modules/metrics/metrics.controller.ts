@@ -22,11 +22,7 @@ export class MetricsController {
 
   @Get()
   getProgressMetrics(@Query() filter: GetMetricsQueryDTO) {
-    if (Object.values(filter).some(value => !!value)) {
-      return this.metricService.findAndCountWithFilter(filter);
-    }
-
-    return this.metricService.findAndCount();
+    return this.metricService.findAndCount(filter);
   }
 
   @Get(':id')
