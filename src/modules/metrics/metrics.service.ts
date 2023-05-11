@@ -14,33 +14,27 @@ export class MetricsService {
     });
   }
 
-  async findAndCount(): Promise<Page<ProgressMetric>> {
+  async findAndCount(
+    filter: GetMetricsQueryDTO
+  ): Promise<Page<ProgressMetric>> {
+    const filters = {
+      updatedAt: {
+        gte: filter.start,
+        lte: filter.end,
+      },
+      exerciseId: filter.exerciseId,
+      userId:     filter.userId,
+    };
+
     return {
       rows: await this.prisma.progressMetric.findMany({
         orderBy: { id: 'asc' },
+        where:   filters,
       }),
-      count: await this.prisma.progressMetric.count(),
-    };
-  }
-
-  async findAndCountWithFilter(
-    filter: GetMetricsQueryDTO
-  ): Promise<Page<ProgressMetric>> {
-    const rows = await this.prisma.progressMetric.findMany({
-      orderBy: { id: 'asc' },
-      where:   {
-        updatedAt: {
-          gte: filter.start,
-          lte: filter.end,
-        },
-        exerciseId: filter.exercise,
-        userId:     filter.user,
-      },
-    });
-
-    return {
-      rows,
-      count: rows.length,
+      count: await this.prisma.progressMetric.count({
+        orderBy: { id: 'asc' },
+        where:   filters,
+      }),
     };
   }
 
