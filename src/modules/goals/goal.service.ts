@@ -68,10 +68,10 @@ export class GoalService {
     }
 
     const filter = new GetMetricsQueryDTO();
-    filter.exercise = goal.exerciseId.toString();
+    filter.exerciseId = goal.exerciseId.toString();
     filter.start = new Date(goal.createdAt).toISOString();
 
-    const metrics = await this.metricsService.findAndCountWithFilter(filter);
+    const metrics = await this.metricsService.findAndCount(filter);
 
     // check the value of all metrics returned and compare it with the expected goal value
     const value = sumBy(metrics.rows, 'value');
