@@ -45,7 +45,7 @@ export class GoalController {
   @Put(':id')
   async editGoal(
     @Param('id', ParseIntPipe) id: number,
-    @Body() goal: GoalDto
+    @Body() goal: Goal
   ): Promise<Goal> {
     const editedGoal = await this.goalService.editGoal(id, goal);
 

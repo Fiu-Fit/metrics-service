@@ -42,7 +42,7 @@ export class GoalService {
     return Promise.all(goals.map(goal => this.checkGoalStatus(goal)));
   }
 
-  editGoal(id: number, goal: GoalDto): Promise<Goal> {    
+  editGoal(id: number, goal: Goal): Promise<Goal> {    
     return this.prismaService.goal.update({
       where: { id },
       data:  goal,
@@ -90,12 +90,9 @@ export class GoalService {
    * @returns the updated Goal.
   */
   updateGoalStatus(goal: Goal, status: GoalStatus): Promise<Goal> {
-    const updatedGoalDto = new GoalDto;
-    Object.assign(updatedGoalDto, { ...goal, status });
-
     return this.editGoal(
       goal.id, 
-      updatedGoalDto
+      { ...goal, status }
     );        
   }
 
