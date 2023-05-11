@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Goal, GoalStatus } from '@prisma/client';
+import { sumBy } from 'lodash';
 import { PrismaService } from '../../prisma.service';
 import { GetMetricsQueryDTO } from '../metrics/dto';
 import { MetricsService } from '../metrics/metrics.service';
 import { GetGoalsQueryDto } from './dto/get-goals-query.dto';
-import { GoalDTO } from './dto/goal.dto';
+import { GoalDto } from './dto/goal.dto';
 
 @Injectable()
 export class GoalService {
@@ -13,9 +14,8 @@ export class GoalService {
     private metricsService: MetricsService
   ) {}
 
-  async createGoal(goal: GoalDTO): Promise<Goal> {
-    const createdGoal = await this.prismaService.goal.create({ data: goal });
-    return createdGoal;
+  createGoal(goal: GoalDto): Promise<Goal> {
+    return this.prismaService.goal.create({ data: goal });
   }
 
   async getGoalById(id: number): Promise<Goal | null> {
@@ -30,24 +30,19 @@ export class GoalService {
     return this.checkGoalStatus(goal);
   }
 
-  async findAll(): Promise<Goal[]> {
-    const updatedGoals = await this.prismaService.goal.findMany({  
-      orderBy:  { id: 'asc' },
-    }).then(goals => Promise.all(goals.map(goal => this.checkGoalStatus(goal))));
-
-    return updatedGoals;
-  }
-
-  async findAllWithFilter(filter: GetGoalsQueryDto): Promise<Goal[]> {
-    const updatedGoals = await this.prismaService.goal.findMany({
+  async findAll(filter: GetGoalsQueryDto): Promise<Goal[]> {
+    const goals = await this.prismaService.goal.findMany({
       orderBy: { id: 'asc' },
-      where:   { userId: filter.user }
-    }).then(goals => Promise.all(goals.map(goal => this.checkGoalStatus(goal))));
+      where:   { 
+        userId:     filter.userId,
+        exerciseId: filter.exerciseId,
+       }
+    });
 
-    return updatedGoals;
+    return Promise.all(goals.map(goal => this.checkGoalStatus(goal)));
   }
 
-  editGoal(id: number, goal: GoalDTO): Promise<Goal> {    
+  editGoal(id: number, goal: GoalDto): Promise<Goal> {    
     return this.prismaService.goal.update({
       where: { id },
       data:  goal,
@@ -55,12 +50,9 @@ export class GoalService {
   }
 
   deleteGoal(id: number): Promise<Goal> {
-    const goal = this.prismaService.goal.delete({
-      where: {
-        id,
-      },
+    return this.prismaService.goal.delete({
+      where: { id } 
     });
-    return goal;
   }
 
   /**
@@ -82,16 +74,13 @@ export class GoalService {
     const metrics = await this.metricsService.findAndCountWithFilter(filter);
 
     // check the value of all metrics returned and compare it with the expected goal value
-    let value = 0;
-    metrics.rows.forEach(metric => {
-      value += metric.value;
-    });
+    const value = sumBy(metrics.rows, 'value');
 
-    if (value >= goal.targetValue) {
-      const status = (goal.deadline && goal.deadline >= new Date()) ? GoalStatus.Completed : GoalStatus.CompletedLate;
-      return this.updateGoalStatus(goal, status);
+    if (value < goal.targetValue) {
+      return goal;
     }
-    return goal;
+    const status = (goal.deadline && goal.deadline >= new Date()) ? GoalStatus.Completed : GoalStatus.CompletedLate;
+    return this.updateGoalStatus(goal, status);
   }
 
   /**
@@ -101,7 +90,7 @@ export class GoalService {
    * @returns the updated Goal.
   */
   updateGoalStatus(goal: Goal, status: GoalStatus): Promise<Goal> {
-    const updatedGoalDto = new GoalDTO;
+    const updatedGoalDto = new GoalDto;
     Object.assign(updatedGoalDto, { ...goal, status });
 
     return this.editGoal(

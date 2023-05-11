@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Goal } from '@prisma/client';
 import { GetGoalsQueryDto } from './dto/get-goals-query.dto';
-import { GoalDTO } from './dto/goal.dto';
+import { GoalDto } from './dto/goal.dto';
 import { GoalService } from './goal.service';
 
 @Controller('goals')
@@ -20,16 +20,13 @@ export class GoalController {
   constructor(private readonly goalService: GoalService) {}
 
   @Post()
-  createGoal(@Body() goal: GoalDTO): Promise<Goal> {
+  createGoal(@Body() goal: GoalDto): Promise<Goal> {
     return this.goalService.createGoal(goal);
   }
 
   @Get() 
   getGoals(@Query() filter: GetGoalsQueryDto): Promise<Goal[]> {
-    if (Object.values(filter).some(value => !!value)) {
-      return this.goalService.findAllWithFilter(filter);
-    }
-    return this.goalService.findAll();
+    return this.goalService.findAll(filter);
   }
 
   @Get(':id')
@@ -48,7 +45,7 @@ export class GoalController {
   @Put(':id')
   async editGoal(
     @Param('id', ParseIntPipe) id: number,
-    @Body() goal: GoalDTO
+    @Body() goal: GoalDto
   ): Promise<Goal> {
     const editedGoal = await this.goalService.editGoal(id, goal);
 
