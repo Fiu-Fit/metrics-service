@@ -17,21 +17,24 @@ export class MetricsService {
   async findAndCount(
     filter: GetMetricsQueryDTO
   ): Promise<Page<ProgressMetric>> {
-    const rows = await this.prisma.progressMetric.findMany({
-      orderBy: { id: 'asc' },
-      where:   {
-        updatedAt: {
-          gte: filter.start,
-          lte: filter.end,
-        },
-        exerciseId: filter.exerciseId,
-        userId:     filter.userId,
+    const filters = {
+      updatedAt: {
+        gte: filter.start,
+        lte: filter.end,
       },
-    });
+      exerciseId: filter.exerciseId,
+      userId:     filter.userId,
+    };
 
     return {
-      rows,
-      count: rows.length,
+      rows: await this.prisma.progressMetric.findMany({
+        orderBy: { id: 'asc' },
+        where:   filters,
+      }),
+      count: await this.prisma.progressMetric.count({
+        orderBy: { id: 'asc' },
+        where:   filters,
+      }),
     };
   }
 
