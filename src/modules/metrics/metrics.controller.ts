@@ -8,7 +8,11 @@ import {
   Put,
   Query,
 } from '@nestjs/common/decorators';
-import { GetMetricsQueryDTO, ProgressMetricDTO } from './dto';
+import {
+  EditProgressMetricDTO,
+  GetMetricsQueryDTO,
+  ProgressMetricDTO,
+} from './dto';
 import { MetricsService } from './metrics.service';
 
 @Controller('metrics')
@@ -42,7 +46,7 @@ export class MetricsController {
   @Put(':id')
   async updateProgressMetric(
     @Param('id') id: number,
-    @Body() data: ProgressMetricDTO
+    @Body() data: EditProgressMetricDTO
   ) {
     const targetProgressMetric = await this.metricService.getProgressMetricById(
       id

@@ -3,7 +3,11 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ProgressMetric } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
-import { GetMetricsQueryDTO, ProgressMetricDTO } from './dto';
+import {
+  EditProgressMetricDTO,
+  GetMetricsQueryDTO,
+  ProgressMetricDTO,
+} from './dto';
 
 @Injectable()
 export class MetricsService {
@@ -92,7 +96,7 @@ export class MetricsService {
 
   editProgressMetric(
     id: number,
-    data: ProgressMetricDTO
+    data: EditProgressMetricDTO
   ): Promise<ProgressMetric | null> {
     return this.prisma.progressMetric.update({
       where: {
