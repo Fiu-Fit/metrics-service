@@ -1,4 +1,5 @@
-import { Page } from '@fiu-fit/common';
+import { Exercise, Page, User } from '@fiu-fit/common';
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ProgressMetric } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
@@ -6,30 +7,48 @@ import { GetMetricsQueryDTO, ProgressMetricDTO } from './dto';
 
 @Injectable()
 export class MetricsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly httpService: HttpService
+  ) {}
 
-  burntCalories(
-    // exerciseId: string,
-    timeSpent: number
-    // userId: number
-  ): number {
-    const METValue = 0; // Change this
-    const bodyWeight = 0; // Change this
+  async burntCalories(
+    exerciseId: string,
+    timeSpent: number,
+    userId: number
+  ): Promise<number> {
+    const {
+      data: { METValue },
+    } = await this.httpService
+      .get<Exercise>(
+        `${process.env.WORKOUT_SERVICE_URL}/exercises/${exerciseId}`,
+        {
+          headers: { 'api-key': process.env.WORKOUT_API_KEY },
+        }
+      )
+      .toPromise();
+
+    const {
+      data: { bodyWeight },
+    } = await this.httpService
+      .get<User>(`${process.env.USER_SERVICE_URL}/users/${userId}`, {
+        headers: { 'api-key': process.env.USER_API_KEY },
+      })
+      .toPromise();
     return ((METValue * 3.5 * bodyWeight) / (200 * 60)) * timeSpent;
   }
 
-  createProgressMetric(data: ProgressMetricDTO): Promise<ProgressMetric> {
-    const burntCalories = this.burntCalories(
-      // data.exerciseId,
-      data.timeSpent
-      // data.value,
+  async createProgressMetric(data: ProgressMetricDTO): Promise<ProgressMetric> {
+    const burntCalories = await this.burntCalories(
+      data.exerciseId,
+      data.timeSpent,
+      data.userId
     );
 
+    const metricData = { ...data, timeSpent: undefined, burntCalories };
+
     return this.prisma.progressMetric.create({
-      data: {
-        ...data,
-        burntCalories,
-      },
+      data: metricData,
     });
   }
 
