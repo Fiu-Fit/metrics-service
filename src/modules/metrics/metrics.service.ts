@@ -8,9 +8,28 @@ import { GetMetricsQueryDTO, ProgressMetricDTO } from './dto';
 export class MetricsService {
   constructor(private prisma: PrismaService) {}
 
+  burntCalories(
+    // exerciseId: string,
+    timeSpent: number
+    // userId: number
+  ): number {
+    const METValue = 0; // Change this
+    const bodyWeight = 0; // Change this
+    return ((METValue * 3.5 * bodyWeight) / (200 * 60)) * timeSpent;
+  }
+
   createProgressMetric(data: ProgressMetricDTO): Promise<ProgressMetric> {
+    const burntCalories = this.burntCalories(
+      // data.exerciseId,
+      data.timeSpent
+      // data.value,
+    );
+
     return this.prisma.progressMetric.create({
-      data,
+      data: {
+        ...data,
+        burntCalories,
+      },
     });
   }
 

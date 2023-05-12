@@ -11,13 +11,13 @@ datasource db {
 }
 
 model ProgressMetric {
-  id             Int      @id @default(autoincrement())
-  calories_burnt Float
-  value          Float
-  unit           Unit
-  exerciseId     String
-  userId         Int
-  updatedAt      DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  burntCalories Float
+  value         Float
+  unit          Unit
+  exerciseId    String
+  userId        Int
+  updatedAt     DateTime @updatedAt
 }
 
 enum Unit {

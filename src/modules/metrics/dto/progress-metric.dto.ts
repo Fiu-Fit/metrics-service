@@ -1,9 +1,16 @@
 import { Unit } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+} from 'class-validator';
 
 export class ProgressMetricDTO {
   @IsNumber()
-  calories_burnt: number;
+  @IsPositive()
+  timeSpent: number;
 
   @IsNumber()
   value: number;
