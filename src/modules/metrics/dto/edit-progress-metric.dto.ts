@@ -7,10 +7,10 @@ import {
   IsPositive,
 } from 'class-validator';
 
-export class ProgressMetricDTO {
+export class EditProgressMetricDTO {
   @IsNumber()
   @IsPositive()
-  timeSpent: number;
+  burntCalories: number;
 
   @IsNumber()
   value: number;
