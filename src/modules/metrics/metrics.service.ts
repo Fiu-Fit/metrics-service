@@ -2,6 +2,7 @@ import { Exercise, Page, User } from '@fiu-fit/common';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ProgressMetric } from '@prisma/client';
+import { firstValueFrom } from 'rxjs';
 import { PrismaService } from '../../prisma.service';
 import {
   EditProgressMetricDTO,
@@ -23,22 +24,25 @@ export class MetricsService {
   ): Promise<number> {
     const {
       data: { METValue },
-    } = await this.httpService
-      .get<Exercise>(
+    } = await firstValueFrom(
+      this.httpService.get<Exercise>(
         `${process.env.WORKOUT_SERVICE_URL}/exercises/${exerciseId}`,
         {
           headers: { 'api-key': process.env.WORKOUT_API_KEY },
         }
       )
-      .toPromise();
+    );
 
     const {
       data: { bodyWeight },
-    } = await this.httpService
-      .get<User>(`${process.env.USER_SERVICE_URL}/users/${userId}`, {
-        headers: { 'api-key': process.env.USER_API_KEY },
-      })
-      .toPromise();
+    } = await firstValueFrom(
+      this.httpService.get<User>(
+        `${process.env.USER_SERVICE_URL}/users/${userId}`,
+        {
+          headers: { 'api-key': process.env.USER_API_KEY },
+        }
+      )
+    );
     return ((METValue * 3.5 * bodyWeight) / (200 * 60)) * timeSpent;
   }
 
