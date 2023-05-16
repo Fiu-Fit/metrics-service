@@ -25,3 +25,21 @@ enum Unit {
   METERS
   SECONDS
 }
+
+model Goal {
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String
+  userId       Int
+  targetValue  Int
+  deadline     DateTime?
+  createdAt    DateTime     @default(now())
+  exerciseId   String
+  status       GoalStatus   @default(InProgress)
+}
+
+enum GoalStatus {
+  InProgress
+  Completed
+  CompletedLate
+}
