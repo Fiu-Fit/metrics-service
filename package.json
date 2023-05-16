@@ -32,13 +32,13 @@
     "lint:prettier": "prettier --config .prettierrc.json --ignore-path .prettierignore --write",
     "lint:eslint": "eslint --fix -c .eslintrc.json --ignore-path .eslintignore",
     "lint": "yarn run lint:prettier && yarn run lint:eslint",
-    "common:install": "yarn add ssh://git@github.com:Fiu-Fit/common.git && yarn"
+    "common:install": "yarn add https://github.com/Fiu-Fit/common.git && yarn"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seeder.ts"
   },
   "dependencies": {
-    "@fiu-fit/common": "ssh://git@github.com:Fiu-Fit/common.git",
+    "@fiu-fit/common": "https://github.com/Fiu-Fit/common.git",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.3.12",
     "@nestjs/config": "^2.3.1",
