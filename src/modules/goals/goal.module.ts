@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from '../../prisma.service';
@@ -10,6 +11,7 @@ import { GoalService } from './goal.service';
     ConfigModule.forRoot({
       envFilePath: ['.env'],
     }),
+    HttpModule
   ],
   exports:     [GoalService],
   controllers: [GoalController],
