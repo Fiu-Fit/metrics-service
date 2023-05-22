@@ -6,7 +6,12 @@ import { GoalController } from './goal.controller';
 import { GoalService } from './goal.service';
 
 @Module({
-  imports:     [HttpModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+    }),
+    HttpModule
+  ],
   exports:     [GoalService],
   controllers: [GoalController],
   providers:   [GoalService, ProgressService, PrismaService],
