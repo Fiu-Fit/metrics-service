@@ -6,12 +6,12 @@ import { firstValueFrom } from 'rxjs';
 import { PrismaService } from '../../prisma.service';
 import {
   EditProgressMetricDTO,
-  GetMetricsQueryDTO,
+  GetProgressMetricsQueryDTO,
   ProgressMetricDTO,
 } from './dto';
 
 @Injectable()
-export class MetricsService {
+export class ProgressService {
   constructor(
     private prisma: PrismaService,
     private readonly httpService: HttpService
@@ -61,7 +61,7 @@ export class MetricsService {
   }
 
   async findAndCount(
-    filter: GetMetricsQueryDTO
+    filter: GetProgressMetricsQueryDTO
   ): Promise<Page<ProgressMetric>> {
     const filters = {
       updatedAt: {

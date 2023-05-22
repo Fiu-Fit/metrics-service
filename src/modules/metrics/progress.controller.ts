@@ -10,28 +10,28 @@ import {
 } from '@nestjs/common/decorators';
 import {
   EditProgressMetricDTO,
-  GetMetricsQueryDTO,
+  GetProgressMetricsQueryDTO,
   ProgressMetricDTO,
 } from './dto';
-import { MetricsService } from './metrics.service';
+import { ProgressService } from './progress.service';
 
 @Controller('metrics')
-export class MetricsController {
-  constructor(private metricService: MetricsService) {}
+export class ProgressController {
+  constructor(private progressService: ProgressService) {}
 
   @Post()
   createProgressMetric(@Body() body: ProgressMetricDTO) {
-    return this.metricService.createProgressMetric(body);
+    return this.progressService.createProgressMetric(body);
   }
 
   @Get()
-  getProgressMetrics(@Query() filter: GetMetricsQueryDTO) {
-    return this.metricService.findAndCount(filter);
+  getProgressMetrics(@Query() filter: GetProgressMetricsQueryDTO) {
+    return this.progressService.findAndCount(filter);
   }
 
   @Get(':id')
   async getProgressMetricById(@Param('id') id: number) {
-    const progressMetric = await this.metricService.getProgressMetricById(id);
+    const progressMetric = await this.progressService.getProgressMetricById(id);
     if (!progressMetric) {
       throw new NotFoundException({ message: 'Progress metric not found' });
     }
@@ -44,17 +44,16 @@ export class MetricsController {
     @Param('id') id: number,
     @Body() data: EditProgressMetricDTO
   ) {
-    const targetProgressMetric = await this.metricService.getProgressMetricById(
-      id
-    );
+    const targetProgressMetric =
+      await this.progressService.getProgressMetricById(id);
     if (!targetProgressMetric) {
       throw new NotFoundException({ message: 'Progress metric not found' });
     }
-    return this.metricService.editProgressMetric(id, data);
+    return this.progressService.editProgressMetric(id, data);
   }
 
   @Delete(':id')
   deleteProgressMetric(@Param('id') id: number) {
-    return this.metricService.deleteProgressMetric(id);
+    return this.progressService.deleteProgressMetric(id);
   }
 }

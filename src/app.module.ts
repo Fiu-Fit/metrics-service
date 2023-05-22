@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GoalModule } from './modules/goals/goal.module';
-import { MetricsModule } from './modules/metrics/metrics.module';
+import { ProgressModule } from './modules/metrics/progress.module';
 
 @Module({
-  imports:     [ConfigModule.forRoot(), MetricsModule, GoalModule],
+  imports:     [ConfigModule.forRoot(), ProgressModule, GoalModule],
   controllers: [AppController],
   providers:   [AppService],
 })
