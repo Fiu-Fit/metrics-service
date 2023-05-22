@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Goal, GoalStatus } from '@prisma/client';
 import { sumBy } from 'lodash';
 import { PrismaService } from '../../prisma.service';
-import { GetProgressMetricsQueryDTO } from '../metrics/dto';
-import { ProgressService } from '../metrics/progress.service';
+import { GetProgressMetricsQueryDTO } from '../progress/dto';
+import { ProgressService } from '../progress/progress.service';
 import { GetGoalsQueryDto } from './dto/get-goals-query.dto';
 import { GoalDto } from './dto/goal.dto';
 

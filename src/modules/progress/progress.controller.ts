@@ -15,7 +15,7 @@ import {
 } from './dto';
 import { ProgressService } from './progress.service';
 
-@Controller('metrics')
+@Controller('progress')
 export class ProgressController {
   constructor(private progressService: ProgressService) {}
 
