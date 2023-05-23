@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fiu-fit-metrics
+      POSTGRES_DB: fiu-fit-progress
     networks:
       - fiu-fit
   test-db:
@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fiu-fit-metrics-test
+      POSTGRES_DB: fiu-fit-progress-test
     networks:
       - fiu-fit
 networks:

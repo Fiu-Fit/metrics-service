@@ -1,8 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from '../../prisma.service';
-import { MetricsService } from '../metrics/metrics.service';
+import { ProgressService } from '../progress/progress.service';
 import { GoalController } from './goal.controller';
 import { GoalService } from './goal.service';
 
@@ -15,6 +14,6 @@ import { GoalService } from './goal.service';
   ],
   exports:     [GoalService],
   controllers: [GoalController],
-  providers:   [GoalService, MetricsService, PrismaService],
+  providers:   [GoalService, ProgressService, PrismaService],
 })
 export class GoalModule {}

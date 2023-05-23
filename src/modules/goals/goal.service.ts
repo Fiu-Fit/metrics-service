@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Goal, GoalStatus } from '@prisma/client';
 import { sumBy } from 'lodash';
 import { PrismaService } from '../../prisma.service';
-import { GetMetricsQueryDTO } from '../metrics/dto';
-import { MetricsService } from '../metrics/metrics.service';
+import { GetProgressMetricsQueryDTO } from '../progress/dto';
+import { ProgressService } from '../progress/progress.service';
 import { GetGoalsQueryDto } from './dto/get-goals-query.dto';
 import { GoalDto } from './dto/goal.dto';
 
@@ -11,7 +11,7 @@ import { GoalDto } from './dto/goal.dto';
 export class GoalService {
   constructor(
     private prismaService: PrismaService,
-    private metricsService: MetricsService
+    private progressService: ProgressService
   ) {}
 
   createGoal(goal: GoalDto): Promise<Goal> {
@@ -26,23 +26,23 @@ export class GoalService {
     if (!goal) {
       return null;
     }
-      
+
     return this.checkGoalStatus(goal);
   }
 
   async findAll(filter: GetGoalsQueryDto): Promise<Goal[]> {
     const goals = await this.prismaService.goal.findMany({
       orderBy: { id: 'asc' },
-      where:   { 
+      where:   {
         userId:     filter.userId,
         exerciseId: filter.exerciseId,
-       }
+      },
     });
 
     return Promise.all(goals.map(goal => this.checkGoalStatus(goal)));
   }
 
-  editGoal(id: number, goal: Goal): Promise<Goal> {    
+  editGoal(id: number, goal: Goal): Promise<Goal> {
     return this.prismaService.goal.update({
       where: { id },
       data:  goal,
@@ -51,27 +51,30 @@ export class GoalService {
 
   deleteGoal(id: number): Promise<Goal> {
     return this.prismaService.goal.delete({
-      where: { id } 
+      where: { id },
     });
   }
 
   /**
- * Checks if the Goal is completed or not. If it is not, it will check the value of all metrics
- * related to the Goal and compare it with the target goal value.
- * The Goal status will be updated if the target value is reached.
- * @param goal the goal to check its status.
- * @returns an updated Goal or the same passed as input if it did not update.
- */
+   * Checks if the Goal is completed or not. If it is not, it will check the value of all metrics
+   * related to the Goal and compare it with the target goal value.
+   * The Goal status will be updated if the target value is reached.
+   * @param goal the goal to check its status.
+   * @returns an updated Goal or the same passed as input if it did not update.
+   */
   async checkGoalStatus(goal: Goal): Promise<Goal> {
-    if (goal.status === GoalStatus.Completed || goal.status === GoalStatus.CompletedLate) { 
-      return goal; 
+    if (
+      goal.status === GoalStatus.Completed ||
+      goal.status === GoalStatus.CompletedLate
+    ) {
+      return goal;
     }
 
-    const filter = new GetMetricsQueryDTO();
+    const filter = new GetProgressMetricsQueryDTO();
     filter.exerciseId = goal.exerciseId.toString();
     filter.start = new Date(goal.createdAt).toISOString();
 
-    const metrics = await this.metricsService.findAndCount(filter);
+    const metrics = await this.progressService.findAndCount(filter);
 
     // check the value of all metrics returned and compare it with the expected goal value
     const value = sumBy(metrics.rows, 'value');
@@ -79,7 +82,10 @@ export class GoalService {
     if (value < goal.targetValue) {
       return goal;
     }
-    const status = (goal.deadline && goal.deadline >= new Date()) ? GoalStatus.Completed : GoalStatus.CompletedLate;
+    const status =
+      goal.deadline && goal.deadline >= new Date()
+        ? GoalStatus.Completed
+        : GoalStatus.CompletedLate;
     return this.updateGoalStatus(goal, status);
   }
 
@@ -88,12 +94,8 @@ export class GoalService {
    * @param goal the goal to update its status.
    * @param status the new status of the Goal.
    * @returns the updated Goal.
-  */
+   */
   updateGoalStatus(goal: Goal, status: GoalStatus): Promise<Goal> {
-    return this.editGoal(
-      goal.id, 
-      { ...goal, status }
-    );        
+    return this.editGoal(goal.id, { ...goal, status });
   }
-
 }
